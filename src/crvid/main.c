@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../utils/array.c"
-#include "../utils/islifeagame.c"
 
 
 int main(int argc, char** argv)
@@ -34,17 +33,23 @@ int main(int argc, char** argv)
 		int iters; int board; int A; int B; int C; int D;
 		fscanf(input_file, "%d %d %d %d %d %d \n", &iters, &A, &B, &C, &D, &board);
 
-		printf("iters: %d A: %d B: %d C: %d D: %d board: %d\n", iters, A, B, C, D, board);
+		printf(" iters: %d A: %d B: %d C: %d D: %d board: %d \n", iters, A, B, C, D, board);
 
-		char Astr[10];
-		char Bstr[10];
-		char Cstr[10];
-		char Dstr[10];
+		char As[10];
+		char Bs[10];
+		char Cs[10];
+		char Ds[10];
+		char boards[10];
+		char iterss[10];
 
-		sprintf(Astr, "%i", A);
-		sprintf(Bstr, "%i", B);
-		sprintf(Cstr, "%i", C);
-		sprintf(Dstr, "%i", D);
+		sprintf(As, "%i", A);
+		sprintf(Bs, "%i", B);
+		sprintf(Cs, "%i", C);
+		sprintf(Ds, "%i", D);
+
+		char *const args[255] = {As, Bs, Cs, Ds, iterss, boards};
+		execve("../utils/islifeagame.c", args, NULL);
+		printf("hola");
 	}
 
 	fclose(input_file);
