@@ -45,8 +45,10 @@ int main(int argc, char** argv)
 		sprintf(Bs, "%i", B);
 		sprintf(Cs, "%i", C);
 		sprintf(Ds, "%i", D);
+		sprintf(boards, "%i", board);
+		sprintf(iterss, "%i", iters);
 
-		char *const args[255] = {As, Bs, Cs, Ds, iterss, boards};
+		char *const args[255] = {As, Bs, Cs, Ds, boards, iterss};
 		execve("utils", args, NULL);
 		printf("%s\n", strerror(errno));
 	}
