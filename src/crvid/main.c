@@ -48,7 +48,7 @@ int main(int argc, char** argv)
 		sprintf(boards, "%i", board);
 		sprintf(iterss, "%i", iters);
 
-		char *const args[255] = {As, Bs, Cs, Ds, boards, iterss};
+		char *const args[255] = {As, Bs, Cs, Ds, iterss, boards};
 		execve("utils", args, NULL);
 		printf("%s\n", strerror(errno));
 	}

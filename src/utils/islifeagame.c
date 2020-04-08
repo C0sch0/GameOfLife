@@ -7,10 +7,11 @@
 #include <stdbool.h>
 #include <signal.h>
 #include <string.h>
+#include <errno.h>
 
-void printboard(int D, int **board, char *name)
+void printboard(int D, int **board)
 {
-  printf("Proceso: %s\n", name);
+  printf("Proceso: \n");
 
   for (int i = 0; i < D; i++)
   {
@@ -49,19 +50,11 @@ int countcells(int D, int **board)
 int countneighbors(int D, int **board, int x, int y)
 {
   int sum = 0;
-  for (int i = - 1; i < 2; i++)
-  {
-    for (int j = - 1; j < 2; j++)
-    {
-      int col = y + i;
-      int row = x + j;
-      if (col >= 0 && col <= D -1 && row >= 0 && row <= D -1)
-      {
-        sum += board[col][row];
-      }
-    }
-  }
-  sum -= board[y][x];
+  if (x != 0) {if (board[y][x-1] == 1){sum++;}}
+  if (y != 0) {if (board[y-1][x] == 1){sum++;}}
+  if (y+1 != D){if (board[y+1][x] == 1){sum++;}}
+  if (x+1 != D){if (board[y][x+1] == 1){sum++;}}
+
   return sum;
 }
 
@@ -104,29 +97,16 @@ int main(int argc, char *argv[])
 
   // Inicializamos un tablero con el tamano recibido
   board = malloc(sizeof(int*)*D_);
-  for (int j = 0; j < D_; j++)
-  {
-    board[j] = malloc(sizeof(int)*D_);
-  }
+  for (int j = 0; j < D_; j++){board[j] = malloc(sizeof(int)*D_);}
 
   // Llenamos de 0s
-  for (int i = 0; i < D_; i++)
-  {
-    for (int j = 0; j < D_; j++)
-    {
-      board[i][j] = 0;
-    }
-  }
+  for (int i = 0; i < D_; i++){for (int j = 0; j < D_; j++){board[i][j] = 0;}}
 
   // Inicializamos celulas vivas, leyendo del tablero
   // Abrir archivo, sacar la linea pedida
   FILE* tableros_ = fopen("tableros.txt", "r");
 
-  if (!tableros_)
-    {
-      printf("No pille los tableros!\n");
-      return 2;
-    }
+  if (!tableros_){printf("No pille los tableros!\n");return 2;}
 
     int count = 0;
     char line[256];
@@ -145,52 +125,30 @@ int main(int argc, char *argv[])
   printf("linea es %s", line);
 
 
-
-  //char str[] = "Geeks for Geeks";
   char* token;
   char* rest = line;
-
   const char s[2] = " ";
   /* Cuantas celulas vivas hay ???? */
-
-  /* get the first token */
   token = strtok(rest, s);
-
   int total_living_cells = atoi(token);
   printf("total: %d\n", total_living_cells);
 
-  int counter = 0;
 
+  // popular el tablero
+  int counter = 0;
   while (counter < total_living_cells) {
     char* X  = strtok(NULL, s);
     char* Y  = strtok(NULL, s);
     int Xi = atoi(X);
     int Yi = atoi(Y);
-    printf("X: %s X: %s\n", X, Y);
-    board[Xi][Yi] = 1;
+    printf("X: %s Y: %s\n", X, Y);
+    board[Yi][Xi] = 1;
     counter++;
     }
 
-
-    printf("Proceso: ===========\n");
-
-    for (int i = 0; i < D_; i++)
-    {
-      for (int j = 0; j < D_; j++)
-      {
-        if (board[i][j] == 0)
-        {
-          printf("\u25A1 ");
-        }
-        else
-        {
-          printf("\u25A0 ");
-        }
-      }
-      printf("\n");
-    }
-    printf("-------------------------------------\n");
-  /* walk through other tokens   */
+    // Creamos lo que sera la siguiente matriz
+    next = malloc(sizeof(int*)*D_);
+    for (int j = 0; j < D_; j++){next[j] = malloc(sizeof(int)*D_);}
 
 
   // Iniciar Game of Life
@@ -203,16 +161,26 @@ int main(int argc, char *argv[])
 
   while(iteracion_inicial < _iters)
   {
-    //printf("PID: %d - tsim %d\n", getpid(), tsim);
     iteracion_inicial ++;
-
     // Habran muerto todos ?
     if (countcells(D_, board) == 0)
     {
-      printf("%s NOCELLS. Tiempo de simulación: %d. \n", name, tsim - 1);
-      fprintf(output_file, "%s,%d,%d,NOCELLS\n", name, tsim - 1, 0);
+      printf("%s NOCELLS. Tiempo de simulación: %d. \n", name, iteracion_inicial - 1);
+      fprintf(output_file, "%s,%d,%d,NOCELLS\n", name, iteracion_inicial - 1, 0);
       break;
     }
+
+    ///// imprimir tablero ----------------------------
+
+    printf("Proceso: \n");
+    for (int i = 0; i < D_; i++)
+    {for (int j = 0; j < D_; j++){
+        if (board[i][j] == 0)
+        {printf("\u25A1 ");}
+        else
+        {printf("\u25A0 ");}
+      }printf("\n");}printf("-------------------------------------\n");
+      ///// imprimir tablero ----------------------------
 
 
     // count neighbors
@@ -221,7 +189,6 @@ int main(int argc, char *argv[])
       for (int y = 0; y < D_; y++)
       {
         neighbors = countneighbors(D_, board, x, y);
-        printf("vecinosxx %d\n", neighbors);
         state = board[y][x];
         if (state == 0 && neighbors == A_)
         {
@@ -233,6 +200,9 @@ int main(int argc, char *argv[])
         {next[y][x] = state;}
       }
     }
+    printf("%s\n", strerror(errno));
+
+
 
 
     // Antes de cerrar este ciclo, reemplazo board -> next
@@ -256,16 +226,6 @@ int main(int argc, char *argv[])
     }
 
 
-
-    for (int j = 0; j < D_; j++)
-    {
-      free(board[j]);
-      free(next[j]);
-    }
-    free(board);
-    free(next);
-
-    remove(aux);
 
     fclose(output_file);
     return 0;
