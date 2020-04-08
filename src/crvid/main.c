@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../utils/array.c"
+#include "../utils/islifeagame.c"
 
 
 int main(int argc, char** argv)
@@ -22,8 +23,31 @@ int main(int argc, char** argv)
 			return 2;
 		}
 
-	int iter, height, width, living_init;
-	fscanf(input_file, "%i %i %i %i", &iter, &height, &width, &living_init);
+	int process_type;
+	fscanf(input_file, "%i", &process_type);
+
+	if(process_type == 0) {
+		printf("I'm a generator");
+	}
+	if(process_type == 1) {
+		printf("I'm a simulation");
+		int iters; int board; int A; int B; int C; int D;
+		fscanf(input_file, "%d %d %d %d %d %d \n", &iters, &A, &B, &C, &D, &board);
+
+		printf("iters: %d A: %d B: %d C: %d D: %d board: %d\n", iters, A, B, C, D, board);
+
+		char Astr[10];
+		char Bstr[10];
+		char Cstr[10];
+		char Dstr[10];
+
+		sprintf(Astr, "%i", A);
+		sprintf(Bstr, "%i", B);
+		sprintf(Cstr, "%i", C);
+		sprintf(Dstr, "%i", D);
+	}
+
+	fclose(input_file);
 
 }
 
