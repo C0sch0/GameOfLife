@@ -49,7 +49,9 @@ LIB=$(GTK) $(MTH) $(THR)
 COMMON=
 
 # Directorios que serán compilados a un programa
-PROGRAMS=crvid
+PROGRAMS=crvid utils
+
+
 
 # Todos los directorios que contienen archivos de código
 SRCDIR=$(COMMON) $(PROGRAMS)

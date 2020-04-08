@@ -2,8 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../utils/array.c"
-
+#include <errno.h>
 
 int main(int argc, char** argv)
 {
@@ -48,8 +47,8 @@ int main(int argc, char** argv)
 		sprintf(Ds, "%i", D);
 
 		char *const args[255] = {As, Bs, Cs, Ds, iterss, boards};
-		execve("../utils/islifeagame.c", args, NULL);
-		printf("hola");
+		execve("utils", args, NULL);
+		printf("%s\n", strerror(errno));
 	}
 
 	fclose(input_file);
