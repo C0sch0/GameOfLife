@@ -7,7 +7,7 @@
 int main(int argc, char** argv)
 {
 	if(argc != 3) {
-		printf("Modo de uso: %s <input.txt> <linea_n>\n", argv[0]);
+		printf("Debes ingresar: %s <input.txt> <linea_n>\n", argv[0]);
 		printf("\t input.txt : Nombre de archivo con definicion del problema.\n");
 		printf("\t linea_n : lınea del archivo de entrada donde empezar a leer\n");
 		return 1;
@@ -16,17 +16,15 @@ int main(int argc, char** argv)
 	FILE* input_file = fopen(argv[1], "r");
 
 	if (!input_file)
-		{
-			printf("¡El archivo %s no existe!\n", argv[1]);
-			return 2;
-		}
+		{printf("¡El archivo %s no existe!\n", argv[1]);
+			return 2;}
 
 	int process_type;
 	fscanf(input_file, "%i", &process_type);
 
 	if(process_type == 0) {
-		printf("I'm a generator");
-	}
+		printf("I'm a generator");}
+		
 	if(process_type == 1) {
 		printf("I'm a simulation");
 		int iters; int board; int A; int B; int C; int D;
@@ -55,12 +53,4 @@ int main(int argc, char** argv)
 
 	fclose(input_file);
 
-}
-
-int leer_tablero(int linea_a_leer)
-{
-	FILE* tablero_inicial = fopen("tablero.txt", "r");
-	int live_cells;
-	fscanf(tablero_inicial, "%i", &live_cells);
-	return 1;
 }
