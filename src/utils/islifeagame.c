@@ -81,12 +81,12 @@ int main(int argc, char *argv[])
 {
   // Recibimos los parametros iniciales
   int A_; int B_; int C_; int D_; int _board; int _iters;
-  A_ = atoi(argv[0]);
-  B_ = atoi(argv[1]);
-  C_ = atoi(argv[2]);
-  D_ = atoi(argv[3]);
-  _board = atoi(argv[4]);
-  _iters = atoi(argv[5]);
+  _iters = atoi(argv[0]);
+  A_ = atoi(argv[1]);
+  B_ = atoi(argv[2]);
+  C_ = atoi(argv[3]);
+  D_ = atoi(argv[4]);
+  _board = atoi(argv[5]);
   printf(" GOF: _iters: %d _A: %d _B: %d _C: %d _D: %d _board: %d \n", _iters, A_, B_, C_, D_, _board);
 
 
@@ -112,11 +112,8 @@ int main(int argc, char *argv[])
     char line[256];
 
     while (fgets(line, sizeof(line), tableros_)) {
-            printf("%d %d\n", count, _board);
             if(count == _board)
-            {
-                break;
-            }
+            {break;}
             count++;
           }
 
@@ -203,8 +200,6 @@ int main(int argc, char *argv[])
     printf("%s\n", strerror(errno));
 
 
-
-
     // Antes de cerrar este ciclo, reemplazo board -> next
     for (int i = 0; i < D_; i++)
     {
@@ -221,7 +216,7 @@ int main(int argc, char *argv[])
       //printf("Entro al iff\n");
       int count = countcells(D_, board);
       //printf("%s - celulas %d\n", name, count);
-      printf("%s Término por alcanzar tiempo máximo. Tiempo de simulación: %d. %d células\n", name, tsim, count);
+      printf("%s Término por alcanzar tiempo máximo. Tiempo de simulación: %d. %d células\n", name, iteracion_inicial, count);
       fprintf(output_file, "%s,%d,%d,NOTIME\n", name, tsim, count);
     }
 
