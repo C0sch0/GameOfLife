@@ -24,13 +24,19 @@ int main(int argc, char** argv)
 
 	if(process_type == 0) {
 		printf("I'm a generator");}
-		
+		pid_t pid;
+		pid = fork();
+		if (pid < 0) {
+			fprintf(stderr, "Fork Failed");
+			return 1;
+		}
+
 	if(process_type == 1) {
 		printf("I'm a simulation");
 		int iters; int board; int A; int B; int C; int D;
 		fscanf(input_file, "%d %d %d %d %d %d \n", &iters, &A, &B, &C, &D, &board);
 
-		printf(" iters: %d A: %d B: %d C: %d D: %d board: %d \n", iters, A, B, C, D, board);
+		//printf(" iters: %d A: %d B: %d C: %d D: %d board: %d \n", iters, A, B, C, D, board);
 
 		char As[10];
 		char Bs[10];
@@ -48,7 +54,7 @@ int main(int argc, char** argv)
 
 		char *const args[255] = {iterss, As, Bs, Cs, Ds, boards};
 		execve("utils", args, NULL);
-		printf("%s\n", strerror(errno));
+		printf("%s\n ", strerror(errno));
 	}
 
 	fclose(input_file);
