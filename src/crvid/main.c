@@ -23,7 +23,8 @@ int main(int argc, char** argv)
 
 	int linea_a_leer = atoi(argv[2]);
 	//printf("linea %d\n", linea_a_leer);
-  int aux = 0;
+
+	int aux = 0;
   char linea[256];
 
 	while (fgets(linea, sizeof(linea), input_file)) {
