@@ -43,6 +43,7 @@ int main(int argc, char** argv)
 	if(process_type == 0) {
 		int tiempo = atoi(strtok(NULL, var));
 		int n_subprocesos = atoi(strtok(NULL, var));
+		
 		printf("time: %d subprocc: %d\n", tiempo, n_subprocesos);
 		printf("I'm a generator");
 		}
