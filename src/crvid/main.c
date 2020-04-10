@@ -6,6 +6,7 @@
 
 
 int processes;
+char path[255];
 
 int main(int argc, char** argv)
 {
@@ -16,16 +17,18 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-	FILE* input_file = fopen(argv[1], "r");
+	strcpy(path, argv[1]);
+	//printf("path%s\n", path);
+
+	FILE* input_file = fopen(path, "r");
 	if (!input_file)
-		{printf("¡El archivo %s no existe!\n", argv[1]);
+		{printf("¡El archivo %s no existe!\n", path);
 			return 2;}
 
 	int linea_a_leer = atoi(argv[2]);
 	//printf("linea %d\n", linea_a_leer);
-
 	int aux = 0;
-  char linea[256];
+	char linea[256];
 
 	while (fgets(linea, sizeof(linea), input_file)) {
 					if(aux == linea_a_leer)
@@ -44,25 +47,24 @@ int main(int argc, char** argv)
 	if(process_type == 0) {
 		int tiempo = atoi(strtok(NULL, var));
 		int n_subprocesos = atoi(strtok(NULL, var));
-
+		printf("I'm a generator \n");
+		printf("time: %d subprocc: %d\n", tiempo, n_subprocesos);
 
 		pid_t pid;
 		for (int n = 0; n < n_subprocesos; n++){
 			pid = fork();
-
 			if (pid < 0) {
 				fprintf(stderr, "Fork Failed");
 				return 1;
 			}
 
 			else if (pid == 0) {
+				int linea_subprocess = atoi(strtok(NULL, var));
+				printf("linea: %d\n", linea_subprocess);
+				execlp("./crvid", "./crvid", path, linea_subprocess);
+				}
+
 			}
-
-		}
-
-
-		printf("time: %d subprocc: %d\n", tiempo, n_subprocesos);
-		printf("I'm a generator");
 		}
 
 
