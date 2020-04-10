@@ -23,12 +23,17 @@ int main(int argc, char** argv)
 	fscanf(input_file, "%i", &process_type);
 
 	if(process_type == 0) {
-		printf("I'm a generator");}
+
+		int tiempo; int n_subprocesos;
+		fscanf(input_file, "%d %d \n", &tiempo, &n_subprocesos);
+		
 		pid_t pid;
+		printf("I'm a generator");
 		pid = fork();
 		if (pid < 0) {
 			fprintf(stderr, "Fork Failed");
 			return 1;
+			}
 		}
 
 	if(process_type == 1) {
@@ -54,7 +59,6 @@ int main(int argc, char** argv)
 
 		char *const args[255] = {iterss, As, Bs, Cs, Ds, boards};
 		execve("utils", args, NULL);
-		printf("%s\n ", strerror(errno));
 	}
 
 	fclose(input_file);

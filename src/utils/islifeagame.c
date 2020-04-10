@@ -69,7 +69,7 @@ int countneighbors(int D, int **board, int x, int y)
   return sum;
 }
 
-// variables globales
+// globals
 int** board;
 int **next;
 int D_;
