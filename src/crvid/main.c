@@ -3,10 +3,19 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-
+#include <sys/wait.h>
+#include <signal.h>
 
 int processes;
 char path[255];
+
+
+void alarm_handler (int signum)
+{
+    printf ("Times is up\n");
+    raise(SIGTERM);
+}
+
 
 int main(int argc, char** argv)
 {
@@ -18,17 +27,16 @@ int main(int argc, char** argv)
 	}
 
 	strcpy(path, argv[1]);
+  int linea_a_leer = atoi(argv[2]);
+  int aux = 0;
+  char linea[256];
+  FILE* input_file = fopen(path, "r");
 	//printf("path%s\n", path);
+  //printf("linea %d\n", linea_a_leer);
 
-	FILE* input_file = fopen(path, "r");
 	if (!input_file)
 		{printf("¡El archivo %s no existe!\n", path);
 			return 2;}
-
-	int linea_a_leer = atoi(argv[2]);
-	//printf("linea %d\n", linea_a_leer);
-	int aux = 0;
-	char linea[256];
 
 	while (fgets(linea, sizeof(linea), input_file)) {
 					if(aux == linea_a_leer)
@@ -39,16 +47,20 @@ int main(int argc, char** argv)
 	char* _token;
 	char* linea_electa = linea;
 	char var[2] = " ";
-
 	_token = strtok(linea_electa, var);
 	int process_type = atoi(_token);
 	//printf("type: %d\n", process_type);
+  int n_subprocesos = 0;
+
 
 	if(process_type == 0) {
 		int tiempo = atoi(strtok(NULL, var));
-		int n_subprocesos = atoi(strtok(NULL, var));
+		n_subprocesos = atoi(strtok(NULL, var));
 		printf("I'm a generator \n");
 		printf("time: %d subprocc: %d\n", tiempo, n_subprocesos);
+
+    signal (SIGALRM, alarm_handler);
+    alarm(tiempo);
 
 		pid_t pid;
 		for (int n = 0; n < n_subprocesos; n++){
@@ -61,15 +73,17 @@ int main(int argc, char** argv)
 			else if (pid == 0) {
 				int linea_subprocess = atoi(strtok(NULL, var));
 				printf("linea: %d\n", linea_subprocess);
-				execlp("./crvid", "./crvid", path, linea_subprocess);
+				execlp("./crvid", "./crvid", path, linea_subprocess, NULL);
 				}
-
+      else if (pid > 0) {
+        printf("I'm the parent %d \n", pid);
+      }
 			}
 		}
 
-
 	if(process_type == 1) {
-		//printf("I'm a simulation");
+
+		printf("I'm a simulation");
 		int iters = atoi(strtok(NULL, var));
 		int A= atoi(strtok(NULL, var));
 		int B= atoi(strtok(NULL, var));
@@ -94,12 +108,11 @@ int main(int argc, char** argv)
 		char *const args[255] = {iterss, As, Bs, Cs, Ds, boards};
 		execve("utils", args, NULL);
 	}
-
-	/* parent process
-	for (int child = 0; child < processes; child++)
+	//parent process
+	for (int child = 0; child < n_subprocesos; child++)
 	{
 		wait(NULL);
-	}*/
+	}
 
 	printf("%s\n", strerror(errno));
 	fclose(input_file);
