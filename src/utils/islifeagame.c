@@ -111,8 +111,6 @@ int main(int argc, char *argv[])
   _board = atoi(argv[5]);
   //printf("init G.O.L.: _iters: %d _A: %d _B: %d _C: %d _D: %d _board: %d \n", _iters, A_, B_, C_, D_, _board);
 
-
-
   // ctrl + c:
   struct sigaction sign;
   sign.sa_handler = handler;
@@ -143,7 +141,6 @@ int main(int argc, char *argv[])
   fclose(tableros_);
   //printf("Tablero electo:%s", line);
 
-
   char* token;
   char* rest = line;
   const char s[2] = " ";
@@ -151,7 +148,6 @@ int main(int argc, char *argv[])
   token = strtok(rest, s);
   int total_living_cells = atoi(token);
   //printf("total vivas: %d\n", total_living_cells);
-
 
   // popular el tablero
   int counter = 0;
@@ -184,7 +180,6 @@ int main(int argc, char *argv[])
       fprintf(output_file, "0, %d, NOCELLS\n", iteracion_inicial - 1);
       break;
     }
-
 
     /*
     ///// imprimir tablero ----------------------------
