@@ -16,14 +16,13 @@ int main(int argc, char** argv)
 		return 1;
 	}
 
-
 	FILE* input_file = fopen(argv[1], "r");
-
 	if (!input_file)
 		{printf("¡El archivo %s no existe!\n", argv[1]);
 			return 2;}
 
-	int linea_a_leer = atoi(argv[1]);
+	int linea_a_leer = atoi(argv[2]);
+	//printf("linea %d\n", linea_a_leer);
   int aux = 0;
   char linea[256];
 
@@ -35,38 +34,29 @@ int main(int argc, char** argv)
 
 	char* _token;
 	char* linea_electa = linea;
-	const char var[2] = " ";
-	_token = strtok(linea_electa, var);
+	char var[2] = " ";
 
+	_token = strtok(linea_electa, var);
 	int process_type = atoi(_token);
 	//printf("type: %d\n", process_type);
 
 	if(process_type == 0) {
 		int tiempo = atoi(strtok(NULL, var));
 		int n_subprocesos = atoi(strtok(NULL, var));
-		pid_t pid;
-
+		printf("time: %d subprocc: %d\n", tiempo, n_subprocesos);
 		printf("I'm a generator");
-		pid = fork();
-		if (pid < 0) {
-			fprintf(stderr, "Fork Failed");
-			return 1;
-			}
-		else if (pid == 0) {
-			}
 		}
 
+
 	if(process_type == 1) {
-		printf("I'm a simulation");
+		//printf("I'm a simulation");
 		int iters = atoi(strtok(NULL, var));
 		int A= atoi(strtok(NULL, var));
 		int B= atoi(strtok(NULL, var));
 		int C= atoi(strtok(NULL, var));
 		int D= atoi(strtok(NULL, var));
 		int board= atoi(strtok(NULL, var));
-
-		printf(" iters: %d A: %d B: %d C: %d D: %d board: %d \n", iters, A, B, C, D, board);
-
+		//printf(" iters: %d A: %d B: %d C: %d D: %d board: %d \n", iters, A, B, C, D, board);
 		char As[10];
 		char Bs[10];
 		char Cs[10];
@@ -85,12 +75,11 @@ int main(int argc, char** argv)
 		execve("utils", args, NULL);
 	}
 
-
-	/* parent process */
+	/* parent process
 	for (int child = 0; child < processes; child++)
 	{
 		wait(NULL);
-	}
+	}*/
 
 	printf("%s\n", strerror(errno));
 	fclose(input_file);
