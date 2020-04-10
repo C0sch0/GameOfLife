@@ -43,7 +43,23 @@ int main(int argc, char** argv)
 	if(process_type == 0) {
 		int tiempo = atoi(strtok(NULL, var));
 		int n_subprocesos = atoi(strtok(NULL, var));
-		
+
+
+		pid_t pid;
+		for (int n = 0; n < n_subprocesos; n++){
+			pid = fork();
+
+			if (pid < 0) {
+				fprintf(stderr, "Fork Failed");
+				return 1;
+			}
+
+			else if (pid == 0) {
+			}
+
+		}
+
+
 		printf("time: %d subprocc: %d\n", tiempo, n_subprocesos);
 		printf("I'm a generator");
 		}
