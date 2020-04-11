@@ -8,12 +8,12 @@
 
 int processes;
 char path[255];
-
 void alarm_handler(int signum)
 {
     printf ("Times is up\n");
 
 }
+
 
 char nameoffile[255];
 int main(int argc, char** argv)
@@ -56,25 +56,29 @@ int main(int argc, char** argv)
 	if(process_type == 0) {
 		int tiempo = atoi(strtok(NULL, var));
 		n_subprocesos = atoi(strtok(NULL, var));
-		//printf("I'm a generator \n");
-		//printf("time: %d subprocc: %d\n", tiempo, n_subprocesos);
 
-    signal (SIGALRM, alarm_handler);
-    alarm(tiempo);
+
+		//printf("I'm a generator \n");
+		printf("time: %d subprocc: %d\n", tiempo, n_subprocesos);
+    //printf("next: %d\n", next_process);
+
+
 
 		pid_t pid;
 		for (int n = 0; n < n_subprocesos; n++){
+      int next_process = atoi(strtok(NULL, var));
 			pid = fork();
+      signal (SIGALRM, alarm_handler);
+      alarm(tiempo);
 			if (pid < 0) {
 				fprintf(stderr, "Fork Failed");
 				return 1;
 			}
 
 			else if (pid == 0) {
-				char linea_subprocess[255];
-        strcpy(linea_subprocess,strtok(NULL, var));
-        printf("linea: %s\n", linea_subprocess);
-				execlp("./crvid", "./crvid", path, linea_subprocess, NULL);
+        //printf("linea: %s\n", linea_subprocess);
+        printf("i am passing %s\n", path);
+				execlp("./crvid", "./crvid", path, next_process);
         printf("%s\n", strerror(errno));
 				}
       else if (pid > 0) {
@@ -85,7 +89,6 @@ int main(int argc, char** argv)
 		}
 
 	else if(process_type == 1) {
-
 		printf("I'm a simulation");
 		int iters = atoi(strtok(NULL, var));
 		int A= atoi(strtok(NULL, var));

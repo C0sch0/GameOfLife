@@ -98,6 +98,7 @@ void handler(int n)
 int main(int argc, char *argv[])
 {
   strcpy(name, argv[6]);
+  printf("my name is %s\n", name);
   output_file = fopen(name, "a");
   // Recibimos los parametros iniciales
   int A_; int B_; int C_; int _board; int _iters;
@@ -230,7 +231,7 @@ int main(int argc, char *argv[])
 
   }
 
-  if (iteracion_inicial == _iters)
+  if (iteracion_inicial >= _iters)
     {
       int count = countcells(D_, board);
       printf("NOTIME. Tiempo de simulación: %d. %d células\n", iteracion_inicial, count);
