@@ -68,8 +68,10 @@ int main(int argc, char** argv)
 		for (int n = 0; n < n_subprocesos; n++){
       int next_process = atoi(strtok(NULL, var));
 			pid = fork();
+
       signal (SIGALRM, alarm_handler);
       alarm(tiempo);
+
 			if (pid < 0) {
 				fprintf(stderr, "Fork Failed");
 				return 1;
