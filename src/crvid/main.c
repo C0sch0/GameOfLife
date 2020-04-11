@@ -9,14 +9,13 @@
 int processes;
 char path[255];
 
-
-void alarm_handler (int signum)
+void alarm_handler(int signum)
 {
     printf ("Times is up\n");
-    raise(SIGTERM);
+
 }
 
-
+char nameoffile[255];
 int main(int argc, char** argv)
 {
 	if(argc != 3) {
@@ -25,9 +24,10 @@ int main(int argc, char** argv)
 		printf("\t linea_n : lınea del archivo de entrada donde empezar a leer\n");
 		return 1;
 	}
-
-	strcpy(path, argv[1]);
+  strcpy(path, argv[1]);
+  //printf("PATH: %s\n", path);
   int linea_a_leer = atoi(argv[2]);
+  sprintf(nameoffile, "%s.csv", argv[2]);
   int aux = 0;
   char linea[256];
   FILE* input_file = fopen(path, "r");
@@ -56,8 +56,8 @@ int main(int argc, char** argv)
 	if(process_type == 0) {
 		int tiempo = atoi(strtok(NULL, var));
 		n_subprocesos = atoi(strtok(NULL, var));
-		printf("I'm a generator \n");
-		printf("time: %d subprocc: %d\n", tiempo, n_subprocesos);
+		//printf("I'm a generator \n");
+		//printf("time: %d subprocc: %d\n", tiempo, n_subprocesos);
 
     signal (SIGALRM, alarm_handler);
     alarm(tiempo);
@@ -71,17 +71,20 @@ int main(int argc, char** argv)
 			}
 
 			else if (pid == 0) {
-				int linea_subprocess = atoi(strtok(NULL, var));
-				printf("linea: %d\n", linea_subprocess);
+				char linea_subprocess[255];
+        strcpy(linea_subprocess,strtok(NULL, var));
+        printf("linea: %s\n", linea_subprocess);
 				execlp("./crvid", "./crvid", path, linea_subprocess, NULL);
+        printf("%s\n", strerror(errno));
 				}
       else if (pid > 0) {
         printf("I'm the parent %d \n", pid);
+
+        }
       }
-			}
 		}
 
-	if(process_type == 1) {
+	else if(process_type == 1) {
 
 		printf("I'm a simulation");
 		int iters = atoi(strtok(NULL, var));
@@ -105,16 +108,16 @@ int main(int argc, char** argv)
 		sprintf(boards, "%i", board);
 		sprintf(iterss, "%i", iters);
 
-		char *const args[255] = {iterss, As, Bs, Cs, Ds, boards};
+		char *const args[255] = {iterss, As, Bs, Cs, Ds, boards, nameoffile};
 		execve("utils", args, NULL);
 	}
-	//parent process
-	for (int child = 0; child < n_subprocesos; child++)
-	{
-		wait(NULL);
-	}
 
-	printf("%s\n", strerror(errno));
+  //parent process
+  for (int child = 0; child < n_subprocesos; child++)
+  {
+    wait(NULL);
+  }
+
 	fclose(input_file);
 
 }

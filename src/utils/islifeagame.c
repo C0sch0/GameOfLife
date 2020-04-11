@@ -80,11 +80,9 @@ char name[255];
 void handler(int n)
 {
   int cells = countcells(D_, board);
-  // archivos
-  output_file = fopen("output.csv", "a");
   printf("%s terminado por Señal. Tiempo de simulación: %d. %d células\n", name, iteracion_inicial - 1, cells);
   //printboard(D, board, name);
-  fprintf(output_file, "%d, %d, SIGNAL\n", iteracion_inicial - 1, cells);
+  fprintf(output_file, "%d, %d, SIGNAL\n", cells, iteracion_inicial - 1);
   fclose(output_file);
 
   for (int j = 0; j < D_; j++)
@@ -94,13 +92,13 @@ void handler(int n)
   }
   free(board);
   free(next);
-  raise(SIGTERM);
-}
 
+}
 
 int main(int argc, char *argv[])
 {
-  output_file = fopen("output.csv", "a");
+  strcpy(name, argv[6]);
+  output_file = fopen(name, "a");
   // Recibimos los parametros iniciales
   int A_; int B_; int C_; int _board; int _iters;
   _iters = atoi(argv[0]);
@@ -112,9 +110,7 @@ int main(int argc, char *argv[])
   //printf("init G.O.L.: _iters: %d _A: %d _B: %d _C: %d _D: %d _board: %d \n", _iters, A_, B_, C_, D_, _board);
 
   // ctrl + c:
-  struct sigaction sign;
-  sign.sa_handler = handler;
-  sigaction(SIGINT, &sign, NULL);
+  signal(SIGINT, handler);
 
   // Inicializamos un tablero con el tamano recibido
   board = malloc(sizeof(int*)*D_);
@@ -154,9 +150,9 @@ int main(int argc, char *argv[])
   while (counter < total_living_cells) {
     char* X  = strtok(NULL, s);
     char* Y  = strtok(NULL, s);
+    //printf("X: %s Y: %s\n", X, Y);
     int Xi = atoi(X);
     int Yi = atoi(Y);
-    //printf("X: %s Y: %s\n", X, Y);
     board[Yi][Xi] = 1;
     counter++;
     }
@@ -180,24 +176,10 @@ int main(int argc, char *argv[])
       fprintf(output_file, "0, %d, NOCELLS\n", iteracion_inicial - 1);
       break;
     }
-
-    /*
-    ///// imprimir tablero ----------------------------
-    printf("Proceso: \n");
-    for (int i = 0; i < D_; i++)
-    {for (int j =
-      0; j < D_; j++){
-        if (board[i][j] == 0)
-        {printf("\u25A1 ");}
-        else
-        {printf("\u25A0 ");}
-      }printf("\n");}printf("-------------------------------------\n");
-      ///// imprimir tablero ----------------------------
-      */
-
     // Chequear condiciones segun numero de vecinos para cada pos de matriz
     // Ir guardando esta informacion de cambio en una matriz aux
     // Reemplazar original por aux, limpiar aux, y seguir
+
     for (int x = 0; x < D_; x++)
     {
       for (int y = 0; y < D_; y++)
@@ -248,17 +230,30 @@ int main(int argc, char *argv[])
 
   }
 
-
   if (iteracion_inicial == _iters)
     {
       int count = countcells(D_, board);
       printf("NOTIME. Tiempo de simulación: %d. %d células\n", iteracion_inicial, count);
       fprintf(output_file, "%d, %d, NOTIME\n", count, iteracion_inicial);
-      iteracion_inicial++;
     }
 
     //printf("%s\n", strerror(errno));
-
+    printf("Finished!  %s\n", name);
     fclose(output_file);
     return 0;
 }
+
+
+/*
+///// imprimir tablero ----------------------------
+printf("Proceso: \n");
+for (int i = 0; i < D_; i++)
+{for (int j =
+  0; j < D_; j++){
+    if (board[i][j] == 0)
+    {printf("\u25A1 ");}
+    else
+    {printf("\u25A0 ");}
+  }printf("\n");}printf("-------------------------------------\n");
+  ///// imprimir tablero ----------------------------
+  */
